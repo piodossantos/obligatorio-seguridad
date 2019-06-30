@@ -1,0 +1,150 @@
+{% extends 'signature/base.html' %}
+{% block content %}
+    {% if verify_success %}
+        <div class="alert alert-success" role="alert">
+            Se ha verificado correctamente la firma
+        </div>
+    {% endif %}
+    {% if verify_failure %}
+        <div class="alert alert-danger" role="alert">
+            No se ha podido validar la firma
+        </div>
+    {% endif %}
+    <div class="row center" style="margin: 2%">
+
+        <div class="jumbotron jumbotron-fluid col-md-5 col-sd-12" style="padding: 2px">
+            <div class="container">
+                <h2 class="text-center">Firmar archivos</h2>
+                <hr class="my-3">
+                <form action="{% url 'signature:sign' %}" method="post" enctype="multipart/form-data"
+                      onsubmit="return validateSign();">
+                    {% csrf_token %}
+                    <div class="alert alert-warning" role="alert">
+                        No tienes un par de claves? <a href="keys">Genera un par de claves aqui</a>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Clave privada</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="privateKey" type="file" class="custom-file-input" name="clave">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Archivo</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="toSignFile" type="file" class="custom-file-input" name="documento">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row text-right">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">Firmar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-2"></div>
+
+        <div class="jumbotron jumbotron-fluid col-md-5 col-sd-12" style="padding: 2px">
+            <div class="container">
+                <h2 class="text-center">Validar Firma</h2>
+                <hr class="my-3">
+                <form action="{% url 'signature:verify' %}" method="post" enctype="multipart/form-data"
+                      onsubmit="return validateVerify();">
+                    {% csrf_token %}
+
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Clave publica</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="publicKey" type="file" class="custom-file-input" name="clave">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Firma</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="signature" type="file" class="custom-file-input" name="firma">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Documento</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="file" type="file" class="custom-file-input" name="documento">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row text-right">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">Validar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if uploaded_file_url %}
+        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    {% endif %}
+
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#toSignFile,#privateKey,#file,#publicKey,#signature').on('change', function () {
+
+                var fileName = $(this).val();
+                fileName = fileName.replace("C:\\fakepath\\", "");
+
+                $(this).next('.custom-file-label').html(fileName);
+            })
+        });
+
+        function validateSign() {
+            error = ""
+            if (!$('#toSignFile').val()) {
+                error += "Debe ingresar un archivo\n"
+            }
+            if (!$('#privateKey').val()) {
+                error += "Debe seleccionar una llave privada o generar una nueva"
+            }
+            if (error != "") {
+                alert(error)
+                return false;
+            }
+            return true;
+        }
+
+        function validateVerify() {
+            error = ""
+            if (!$('#publicKey').val()) {
+                error += "Debe ingresar una clave publica\n"
+            }
+            if (!$('#file').val()) {
+                error += "Debe seleccionar el archivo a validar\n"
+            }
+            if (!$('#signature').val()) {
+                error += "Debe seleccionar una firma"
+            }
+            if (error != "") {
+                alert(error)
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+{% endblock %}

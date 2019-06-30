@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+{% block title %}Seguridad{% endblock %}
+
+{% block content %}
+    <div class="row center" style="margin-top:2%; margin-bottom: 2%">
+    {% if login_success %}
+
+        {% endif %}
+        <div class="col-md-2 col-sd-12"></div>
+        <div class="col-md-4 col-sd-12 center"style="padding: 3%">
+            <div class="card h-80">
+                <h5 class="card-header text-center">Cifrar archivos</h5>
+                <img class="card-img-top img-fluid img-responsive"
+                     src="https://windowsable.com/wp-content/uploads/2015/09/How-to-password-protect-folders-in-Windows-71.jpg"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Este modulo permite cifrar y desifrar archivos usando el algoritmo AES </p>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="{% url 'files:index' %}" class="btn btn-primary" style="align-items: end;">Comenzar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sd-12 center"style="padding: 3%">
+            <div class="card h-80" >
+                <h5 class="card-header text-center">Firma digital</h5>
+                <img class="card-img-top img-fluid img-responsive"
+                     src="https://efacturacion.pe/wp-content/uploads/2017/07/xxl_27_SGFuZHNfaG9sZF90YWJsZXRfNQ-1024x789.jpg"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Descripcion de firma digital</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="{% url 'signature:index' %}" class="btn btn-primary" style="align-items: end;">Comenzar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sd-12"></div>
+
+    </div>
+
+{% endblock %}

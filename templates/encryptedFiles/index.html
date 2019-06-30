@@ -1,0 +1,164 @@
+{% extends 'encryptedFiles/base.html' %}
+
+
+{% block content %}
+    <div class="row center" style="margin: 2%">
+
+
+        <div class="jumbotron jumbotron-fluid col-md-5 col-sd-12" style="padding: 2px">
+            <div class="container">
+                <h2 class="text-center">Cifrar Archivos</h2>
+                <hr class="my-3">
+                <form action="{% url 'files:uploadFiles' %}" method="post" enctype="multipart/form-data"
+                      onsubmit="return validateEncryptForm();">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Clave</label>
+                        <div class="col-sm-10">
+                            <div class="input-group" id="show_hide_password">
+                                <input id="encryptKey" name="clave" class="form-control" type="password">
+                                <div class="input-group-addon">
+                                    <a href="">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Ver/Ocultar</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Archivo</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="toEncryptFile" type="file" class="custom-file-input" name="archivos">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row text-right">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">Cifrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-2"></div>
+
+        <div class="jumbotron jumbotron-fluid col-md-5 col-sd-12" style="padding: 2px">
+            <div class="container">
+                <h2 class="text-center">Decifrar Archivos</h2>
+                <hr class="my-3">
+                <form action="{% url 'files:decryptFile' %}" method="post" enctype="multipart/form-data"
+                      onsubmit="return validateDecryptForm();">
+                    {% csrf_token %}
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Clave</label>
+                        <div class="col-sm-10">
+                            <div class="input-group" id="show_hide_password2">
+                                <input id="decryptKey" name="clave" class="form-control" type="password">
+                                <div class="input-group-addon">
+                                    <a href="">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Ver/Ocultar</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Archivo</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input id="toDecryptFile" type="file" class="custom-file-input" name="archivos">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row text-right">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">Desifrar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if uploaded_file_url %}
+        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    {% endif %}
+{% endblock %}
+{% block extrajs %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#show_hide_password a").on('click', function (event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                } else if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+
+                }
+            });
+            $("#show_hide_password2 a").on('click', function (event) {
+                event.preventDefault();
+                if ($('#show_hide_password2 input').attr("type") == "text") {
+                    $('#show_hide_password2 input').attr('type', 'password');
+                } else if ($('#show_hide_password2 input').attr("type") == "password") {
+                    $('#show_hide_password2 input').attr('type', 'text');
+
+                }
+            });
+
+            $('#toEncryptFile').on('change', function () {
+
+                var fileName = $(this).val();
+                fileName = fileName.replace("C:\\fakepath\\", "");
+
+                $(this).next('.custom-file-label').html(fileName);
+            })
+            $('#toDecryptFile').on('change', function () {
+
+                var fileName = $(this).val();
+                fileName = fileName.replace("C:\\fakepath\\", "");
+
+                $(this).next('.custom-file-label').html(fileName);
+            })
+        });
+
+        function validateEncryptForm() {
+            error = ""
+            if (!$('#encryptKey').val()) {
+                error += "Debe ingresar una clave\n"
+            }
+            if (!$('#toEncryptFile').val()) {
+                error += "Debe seleccionar un archivo"
+            }
+            if (error != "") {
+                alert(error)
+                return false;
+            }
+            return true;
+        }
+
+        function validateDecryptForm() {
+            error = ""
+            if (!$('#decryptKey').val()) {
+                error += "Debe ingresar una clave\n"
+            }
+            if (!$('#toDecryptFile').val()) {
+                error += "Debe seleccionar un archivo"
+            }
+            if (error != "") {
+                alert(error)
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+{% endblock %}

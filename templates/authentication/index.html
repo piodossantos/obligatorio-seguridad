@@ -1,0 +1,44 @@
+{% extends 'authentication/base.html' %}
+{% block navbar %}{% endblock %}
+{% block bodyClassName %}grandientBackgroun{% endblock %}
+{% block content %}
+    <div class="card justify-content-center align-items-center" style="alignment: center;margin: 10%" align="center">
+
+    <h1 align="center">Iniciar Sesion</h1>
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
+    <img style="max-width: 150px;margin-bottom: 2%"
+         src="https://achievement-images.teamtreehouse.com/badges_Ruby_UserAuthentication_Stage1.png"
+         class="img-responsive">
+    <form action="{% url 'authentication:login' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row" align="center">
+            <div class="col-md-12 col-md-offset-3">
+                <div class="form-group" align="left">
+                    <label for="username">Nombre de usuario:</label>
+                    <input class="form-control" type="text" name="username">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <div class="form-group" align="left">
+                    <label for="password">Contraseña:</label>
+                    <input class="form-control" type="password" name="password">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <div class="form-group" align="center">
+                    <input class="btn btn-primary" type="submit" value="Ingresar">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div>
+{% endblock %}
+{% block footer %}{% endblock %}
